@@ -1,0 +1,22 @@
+{
+  "name": "bookmark-replacer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension that overwrites a chosen bookmark's URL with the current tab's URL on a single click.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "icons": "python3 scripts/generate-icons.py"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.0-beta.28",
+    "@types/chrome": "^0.0.270",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.6"
+  }
+}

@@ -16,6 +16,7 @@ npm run dev        # vite (HMR、Chrome に load unpacked して使う)
 npm run format     # prettier --write .
 npm run format:check
 npm run icons      # python3 scripts/generate-icons.py で public/icons/*.png を再生成
+npm run package    # build → release/bookmark-replacer-v{version}.zip (Chrome Web Store 提出用)
 ```
 
 Pre-PR チェックは `npm run typecheck` と `npm run format:check` が通ること、`npm run build` が成功して `dist/manifest.json` が生成されること。Lint / 単体テストは MVP スコープ外で導入していない。
@@ -61,6 +62,10 @@ src/
 - `manifest.json` を `dist/` に生成
 
 `manifest.config.ts` の `icons` パスは `icons/icon-XX.png` のように **`public/` プレフィックスを付けない**。Vite の慣習で `public/` 配下は dist のルートにフラットにコピーされるため、`public/icons/...` と書くと CRXJS がリテラル解決して二重コピーになる (`dist/icons/` と `dist/public/icons/` の両方が出現する不具合に過去なった)。
+
+### Web Store パッケージング
+
+`scripts/package.mjs` が `archiver` で `dist/` 中身を zip ルートに展開してパッケージ化する (`manifest.json` が zip 直下に来る形が Web Store の要件)。出力先は `release/bookmark-replacer-v{version}.zip` で、ファイル名のバージョンは `package.json` 由来 (manifest と同じ参照源)。`.crx` 生成は実装しない (Web Store 側が署名するため不要、自己ホスト配布をサポートしない方針)。`release/*.zip` は git 管理外、`release/.gitkeep` だけ追跡。
 
 ### アイコン生成
 

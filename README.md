@@ -31,6 +31,7 @@ npm run typecheck  # TypeScript 型チェック
 npm run format     # Prettier で整形 (--check は format:check)
 npm run build      # dist/ にビルド
 npm run dev        # Vite dev (HMR) を起動 (任意)
+npm run package    # build → release/bookmark-replacer-v{version}.zip を生成 (Web Store 提出用)
 ```
 
 ビルドすると `dist/` 以下に展開されます。
@@ -57,6 +58,16 @@ npm run dev        # Vite dev (HMR) を起動 (任意)
 未設定の状態でアイコンをクリックすると、赤色 `!` バッジが表示されてから
 オプションページが自動で開きます。
 
+## Chrome Web Store への提出
+
+1. `package.json` の `version` を上げる (`manifest.json` に自動連動)
+2. `npm run package` を実行
+3. `release/bookmark-replacer-v{version}.zip` が生成される
+4. [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole) からこの zip をアップロード
+
+zip は `dist/` の中身を zip ルートに展開した形 (`manifest.json` が直下) で、
+Web Store の標準フォーマットに準拠しています。`.crx` の作成は不要 (Store 側で署名されます)。
+
 ## ファイル構成
 
 ```
@@ -72,7 +83,9 @@ public/icons/             16/48/128px のアイコン PNG
 manifest.config.ts        @crxjs/vite-plugin の defineManifest
 vite.config.ts            Vite 設定
 scripts/generate-icons.py アイコン PNG 生成 (zlib のみ使用)
+scripts/package.mjs       dist/ → release/*.zip パッケージング
 docs/plans/               Dev workflow の計画ファイル
+release/                  Web Store 提出用 zip 出力先 (zip 自体は git 管理外)
 ```
 
 ## ライセンス

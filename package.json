@@ -14,12 +14,12 @@
     "package": "npm run build && node scripts/package.mjs"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "^2.0.0-beta.28",
+    "@crxjs/vite-plugin": "^2.4.0",
     "@types/archiver": "^7.0.0",
-    "@types/chrome": "^0.0.270",
+    "@types/chrome": "^0.1.40",
     "archiver": "^7.0.1",
-    "prettier": "^3.3.3",
-    "typescript": "^5.5.4",
-    "vite": "^5.4.6"
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10"
   }
 }

@@ -1,0 +1,164 @@
+:root {
+  color-scheme: light dark;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--bg, #fafafa);
+  color: var(--fg, #111);
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    --bg: #1a1a1a;
+    --fg: #f0f0f0;
+  }
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: #555;
+}
+
+@media (prefers-color-scheme: dark) {
+  h2 {
+    color: #aaa;
+  }
+}
+
+.lead {
+  margin: 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.current-display {
+  margin: 0;
+  padding: 12px;
+  border-radius: 6px;
+  background: rgba(79, 142, 247, 0.1);
+  word-break: break-all;
+  font-size: 0.9rem;
+}
+
+.current-display--unset {
+  background: rgba(239, 68, 68, 0.1);
+  color: #b91c1c;
+}
+
+#search {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: var(--bg, #fff);
+  color: inherit;
+}
+
+.bookmark-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  max-height: 360px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.bookmark-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.bookmark-item:last-child {
+  border-bottom: none;
+}
+
+.bookmark-item:hover {
+  background: rgba(79, 142, 247, 0.08);
+}
+
+.bookmark-item--selected {
+  background: rgba(79, 142, 247, 0.2);
+}
+
+.bookmark-item__title {
+  font-weight: 500;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bookmark-item__meta {
+  font-size: 0.8rem;
+  color: #777;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty-state {
+  margin: 12px 0 0;
+  padding: 12px;
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  background: #4f8ef7;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+button:not(:disabled):hover {
+  background: #3b78e0;
+}
+
+.status {
+  font-size: 0.9rem;
+  color: #2e7d32;
+}

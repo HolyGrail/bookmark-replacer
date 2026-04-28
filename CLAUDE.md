@@ -79,3 +79,5 @@ src/
 - **`chrome://`, `edge://`, `about:` 等のページでアイコンクリックされた場合は何もしない**。`tab.url` が `http(s):` 始まりかをチェック済み。仕様変更時もこの分岐を維持する。
 - **`chrome.bookmarks.update()` は ID が削除済みだと reject する**。`background/index.ts` で try/catch + 赤バッジ + options 自動オープンで救済している。
 - **アイコン PNG をテキストエディタや自動整形対象から外す**。`.prettierignore` に `public/icons/` と `*.png` を登録済み。
+- **`tsconfig.json` は `noUnusedLocals` / `noUnusedParameters` / `noImplicitOverride` が ON**。書き捨ての一時変数を残すと `npm run typecheck` が落ちる。Pre-PR ゲートで必ず引っかかるので、未使用は `_` プレフィックスではなく削除する。
+- **`manifest.config.ts` は `package.json` を import attributes (`with { type: 'json' }`) で取り込む**。`name` (manifest 上は固定文字列) を除き `version` / `description` は `package.json` 由来なので、バージョン更新は `package.json` 1 箇所だけ触ればよい。

@@ -65,6 +65,7 @@ npm run package    # build → release/bookmark-replacer-v{version}.zip を生�
 2. `npm run package` を実行
 3. `release/bookmark-replacer-v{version}.zip` が生成される
 4. [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole) からこの zip をアップロード
+5. 掲載情報 (説明文・スクリーンショット・プライバシー欄) は [docs/store/listing.md](docs/store/listing.md) を元に更新する
 
 zip は `dist/` の中身を zip ルートに展開した形 (`manifest.json` が直下) で、
 Web Store の標準フォーマットに準拠しています。`.crx` の作成は不要 (Store 側で署名されます)。
@@ -87,7 +88,9 @@ manifest.config.ts        @crxjs/vite-plugin の defineManifest
 vite.config.ts            Vite 設定
 scripts/generate-icons.py アイコン PNG 生成 (zlib のみ使用)
 scripts/package.mjs       dist/ → release/*.zip パッケージング
+scripts/store-screenshots.mjs  Web Store 用スクリーンショットの生成
 docs/plans/               Dev workflow の計画ファイル
+docs/store/               Web Store の掲載文とスクリーンショット
 release/                  Web Store 提出用 zip 出力先 (zip 自体は git 管理外)
 ```
 

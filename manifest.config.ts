@@ -5,10 +5,11 @@ export default defineManifest({
   manifest_version: 3,
   name: 'Bookmark Replacer',
   version: pkg.version,
-  description: pkg.description,
+  description: '__MSG_extDescription__',
+  default_locale: 'en',
   permissions: ['bookmarks', 'storage', 'activeTab'],
   action: {
-    default_title: 'ブックマーク URL を現在のタブで上書き',
+    default_title: '__MSG_actionTitle__',
   },
   background: {
     service_worker: 'src/background/index.ts',

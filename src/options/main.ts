@@ -1,4 +1,5 @@
 import { getBookmarkLeaf, listBookmarkLeaves } from '../lib/bookmarks';
+import { localizeDocument, t } from '../lib/i18n';
 import { getConfig, setConfig } from '../lib/storage';
 import type { BookmarkLeaf } from '../types';
 
@@ -18,6 +19,9 @@ const currentEl = $<HTMLParagraphElement>('#current-display');
 let allBookmarks: BookmarkLeaf[] = [];
 let savedId: string | null = null;
 let pendingId: string | null = null;
+
+document.documentElement.lang = chrome.i18n.getUILanguage();
+localizeDocument();
 
 void init();
 
@@ -48,14 +52,14 @@ async function init(): Promise<void> {
 
 async function renderCurrent(): Promise<void> {
   if (!savedId) {
-    currentEl.textContent = '未設定';
+    currentEl.textContent = t('unset');
     currentEl.classList.add('current-display--unset');
     return;
   }
   const leaf = await getBookmarkLeaf(savedId);
   currentEl.classList.remove('current-display--unset');
   if (!leaf) {
-    currentEl.textContent = `ID ${savedId} のブックマークは見つかりません (削除されたか、未同期の可能性)`;
+    currentEl.textContent = t('bookmarkNotFound', savedId);
     return;
   }
   currentEl.textContent = `${leaf.title}  —  ${leaf.url}`;
@@ -108,14 +112,14 @@ function updateSelectionUi(): void {
 async function handleSave(): Promise<void> {
   if (!pendingId) return;
   saveBtn.disabled = true;
-  statusEl.textContent = '保存中…';
+  statusEl.textContent = t('saving');
   try {
     await setConfig({ bookmarkId: pendingId });
     savedId = pendingId;
-    statusEl.textContent = '保存しました';
+    statusEl.textContent = t('saved');
     await renderCurrent();
   } catch (err) {
-    statusEl.textContent = `保存に失敗しました: ${err instanceof Error ? err.message : String(err)}`;
+    statusEl.textContent = t('saveFailed', err instanceof Error ? err.message : String(err));
   } finally {
     updateSelectionUi();
     setTimeout(() => {

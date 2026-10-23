@@ -42,7 +42,8 @@ src/
 ├── types.ts              StoredConfig, BookmarkLeaf
 ├── lib/
 │   ├── storage.ts        chrome.storage.sync の薄い型付きラッパー
-│   └── bookmarks.ts      chrome.bookmarks.getTree() を leaf だけに flatten
+│   ├── bookmarks.ts      chrome.bookmarks.getTree() を leaf だけに flatten
+│   └── i18n.ts           chrome.i18n.getMessage の型付きラッパー + data-i18n の適用
 ├── background/index.ts   Service Worker (action.onClicked → lib/storage + chrome.bookmarks.update)
 └── options/              設定ページ (HTML / TS / CSS)
 ```
@@ -52,6 +53,14 @@ src/
 ### ストレージスキーマ
 
 `chrome.storage.sync` のキーは `'config'` 1 本のみ。値は `StoredConfig = { bookmarkId: string | null }`。スキーマを拡張する場合は `src/lib/storage.ts` の `DEFAULT_CONFIG` と `src/types.ts` を同時に更新する。`getConfig()` は常にデフォルトをマージして返すので、新フィールド追加時の後方互換は自動で確保される。
+
+### 多言語対応 (chrome.i18n)
+
+UI 文字列は `public/_locales/{en,ja}/messages.json` に置き、`default_locale` は `en`。表示言語は Chrome の UI 言語で決まり、`ja` 以外は英語にフォールバックする。
+
+- TS からは `src/lib/i18n.ts` の `t(key, substitutions?)` で引く。キーの型は `en/messages.json` から導出しているので、存在しないキーは `npm run typecheck` で落ちる
+- options HTML は `data-i18n` (textContent) / `data-i18n-placeholder` / `data-i18n-aria-label` 属性を付け、`localizeDocument()` が起動時に埋める
+- 文言を追加するときは `en` と `ja` の両方にキーを足す (`ja` 側の欠落は型では検出できない)
 
 ### ビルド: @crxjs/vite-plugin
 
@@ -85,4 +94,4 @@ src/
 - **`chrome.bookmarks.update()` は ID が削除済みだと reject する**。`background/index.ts` で try/catch + 赤バッジ + options 自動オープンで救済している。
 - **アイコン PNG をテキストエディタや自動整形対象から外す**。`.prettierignore` に `public/icons/` と `*.png` を登録済み。
 - **`tsconfig.json` は `noUnusedLocals` / `noUnusedParameters` / `noImplicitOverride` が ON**。書き捨ての一時変数を残すと `npm run typecheck` が落ちる。Pre-PR ゲートで必ず引っかかるので、未使用は `_` プレフィックスではなく削除する。
-- **`manifest.config.ts` は `package.json` を import attributes (`with { type: 'json' }`) で取り込む**。`name` (manifest 上は固定文字列) を除き `version` / `description` は `package.json` 由来なので、バージョン更新は `package.json` 1 箇所だけ触ればよい。
+- **`manifest.config.ts` は `package.json` を import attributes (`with { type: 'json' }`) で取り込む**。`version` は `package.json` 由来なので、バージョン更新は `package.json` 1 箇所だけ触ればよい。`name` は固定文字列、`description` と `action.default_title` は `__MSG_*__` で `_locales` から引く。

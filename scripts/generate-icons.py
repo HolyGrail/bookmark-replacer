@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate flat-color rounded-square PNG icons for the extension.
+"""Generate the "drop-in" bookmark PNG icons for the extension.
 
 Uses only the Python standard library (struct + zlib) so the build has no
 external image dependencies. Produces deterministic output for a given size.
@@ -14,57 +14,81 @@ from pathlib import Path
 OUT_DIR = Path(__file__).resolve().parent.parent / "public" / "icons"
 SIZES = (16, 48, 128)
 
-# Brand color (#4F8EF7) and white pseudo-glyph foreground.
-BG = (0x4F, 0x8E, 0xF7, 0xFF)
-FG = (0xFF, 0xFF, 0xFF, 0xFF)
-TRANSPARENT = (0, 0, 0, 0)
+# Yellow tile with a dark ink bookmark. The glyph contrasts with the tile by
+# lightness (about 11:1), not by hue, so it stays legible under color vision
+# deficiencies and in grayscale. The thin dark edge keeps the tile outline
+# visible on the light Chrome toolbar, where yellow alone is too pale.
+YELLOW = (0xFF, 0xC1, 0x07)
+INK = (0x2B, 0x21, 0x00)
+EDGE = (0x8A, 0x65, 0x00)
 
 
 def make_pixels(size: int) -> list[tuple[int, int, int, int]]:
-    radius = max(2, size // 6)
+    # The design lives on a 16x16 grid. Each pixel is supersampled and the
+    # covered samples are averaged, which anti-aliases the edges at every size.
+    samples = 8 if size <= 16 else 4
+    unit = 16 / size
     pixels: list[tuple[int, int, int, int]] = []
-
-    # Glyph: a centered horizontal "bookmark replace" arrow. We draw a thick
-    # arrow pointing right inside a rounded square. Coordinates kept simple
-    # and proportional so output scales across 16/48/128.
-    bar_top = size * 7 // 16
-    bar_bottom = size * 9 // 16
-    bar_left = size * 5 // 16
-    bar_right = size * 11 // 16
-    head_left = size * 9 // 16
-    head_top = size * 5 // 16
-    head_bottom = size * 11 // 16
-
     for y in range(size):
         for x in range(size):
-            if not _inside_rounded_square(x, y, size, radius):
-                pixels.append(TRANSPARENT)
+            covered = 0
+            rgb = [0, 0, 0]
+            for sy in range(samples):
+                for sx in range(samples):
+                    u = (x + (sx + 0.5) / samples) * unit
+                    v = (y + (sy + 0.5) / samples) * unit
+                    color = _sample(u, v)
+                    if color is None:
+                        continue
+                    covered += 1
+                    for i in range(3):
+                        rgb[i] += color[i]
+            if covered == 0:
+                pixels.append((0, 0, 0, 0))
                 continue
-            if bar_top <= y < bar_bottom and bar_left <= x < bar_right:
-                pixels.append(FG)
-                continue
-            if head_left <= x < bar_right + radius and head_top <= y < head_bottom:
-                # Triangle: width tapers as |y - center|.
-                center_y = (head_top + head_bottom) // 2
-                dy = abs(y - center_y)
-                tip = head_left + (head_bottom - head_top) // 2 - dy
-                if x <= tip + (head_bottom - head_top):
-                    pixels.append(FG)
-                    continue
-            pixels.append(BG)
+            alpha = round(255 * covered / (samples * samples))
+            pixels.append((*(round(c / covered) for c in rgb), alpha))
     return pixels
 
 
-def _inside_rounded_square(x: int, y: int, size: int, radius: int) -> bool:
-    if x < radius and y < radius:
-        return (radius - x - 1) ** 2 + (radius - y - 1) ** 2 <= radius**2
-    if x >= size - radius and y < radius:
-        return (x - (size - radius)) ** 2 + (radius - y - 1) ** 2 <= radius**2
-    if x < radius and y >= size - radius:
-        return (radius - x - 1) ** 2 + (y - (size - radius)) ** 2 <= radius**2
-    if x >= size - radius and y >= size - radius:
-        return (x - (size - radius)) ** 2 + (y - (size - radius)) ** 2 <= radius**2
-    return True
+def _sample(u: float, v: float) -> tuple[int, int, int] | None:
+    # Painter's order from the top: the arrow is cut out of the bookmark, the
+    # bookmark sits on the tile, and the tile has a thin edge ring.
+    if not _inside_rounded_rect(u, v, 0, 0, 16, 16, 3.7):
+        return None
+    if _inside_arrow(u, v):
+        return YELLOW
+    if _inside_bookmark(u, v):
+        return INK
+    if _inside_rounded_rect(u, v, 0.8, 0.8, 15.2, 15.2, 2.9):
+        return YELLOW
+    return EDGE
+
+
+def _inside_rounded_rect(
+    u: float, v: float, x0: float, y0: float, x1: float, y1: float, r: float
+) -> bool:
+    if not (x0 <= u <= x1 and y0 <= v <= y1):
+        return False
+    cx = min(max(u, x0 + r), x1 - r)
+    cy = min(max(v, y0 + r), y1 - r)
+    return (u - cx) ** 2 + (v - cy) ** 2 <= r**2
+
+
+def _inside_bookmark(u: float, v: float) -> bool:
+    # Ribbon from (4.5, 2) to (11.5, 14.2) with a V notch up to (8, 11.2).
+    if not (4.5 <= u <= 11.5 and v >= 2):
+        return False
+    return v <= 11.2 + 3 * abs(u - 8) / 3.5
+
+
+def _inside_arrow(u: float, v: float) -> bool:
+    # Downward arrow: a round-capped shaft from y=3.3 to 6.9 and a head whose
+    # tip reaches y=9, meaning "drop the current page into this bookmark".
+    shaft_y = min(max(v, 3.3), 6.9)
+    if (u - 8) ** 2 + (v - shaft_y) ** 2 <= 0.85**2:
+        return True
+    return 6.2 <= v <= 9 and abs(u - 8) <= 2.4 * (9 - v) / 2.8
 
 
 def encode_png(width: int, height: int, pixels: list[tuple[int, int, int, int]]) -> bytes:

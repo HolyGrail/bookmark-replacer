@@ -2,6 +2,7 @@
 
 - [listing.md](listing.md): 説明文、スクリーンショットの並び、プライバシー欄の記入内容
 - `screenshots/{en,ja}/`: 1280×800 のスクリーンショット
+- `promo/small-tile-440x280.png`: 小さいプロモーション タイル (英語のみ)
 
 ## スクリーンショットの撮り直し
 
@@ -23,5 +24,7 @@ NODE_PATH="$(npm root -g)/@playwright/cli/node_modules" node scripts/store-scree
   ```
 
 - macOS の Chromium は `--lang` を無視してシステム言語で表示する。そのためスクリプトは撮影中だけ、その Chromium のバンドルの `AppleLanguages` を `defaults write` で書き換え、終了時に元へ戻す。表示言語が想定と違えば `UI locale is ...` で止まる
+
+同じ実行で、プロモーション タイルも `promo/` に上書きする。こちらは拡張を読み込まず、`promoTileHtml()` の HTML をそのまま撮る。
 
 キャプションと見本のブックマークは、スクリプト冒頭の `LOCALES` にある。

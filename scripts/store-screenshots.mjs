@@ -1,4 +1,5 @@
-// Chrome Web Store 用スクリーンショット (1280x800) を en / ja で生成する。
+// Chrome Web Store 用スクリーンショット (1280x800) を en / ja で、小さいプロモーション タイル (440x280) を
+// en で生成する。
 // dist/ のビルド済み拡張を Playwright の Chromium に読み込み、options ページの実画面を撮って
 // ブラウザ枠とキャプションを描いた HTML に合成する。ツールバーのバッジはページ外なので枠側で描く。
 //
@@ -18,6 +19,7 @@ const { chromium } = require('playwright-core');
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(root, 'dist');
 const outRoot = join(root, 'docs/store/screenshots');
+const promoDir = join(root, 'docs/store/promo');
 const iconDataUri = `data:image/png;base64,${readFileSync(join(root, 'public/icons/icon-128.png')).toString('base64')}`;
 
 const WIDTH = 1280;
@@ -144,6 +146,61 @@ async function main() {
   for (const [locale, l] of Object.entries(LOCALES)) {
     await shootLocale(locale, l);
   }
+  await renderPromoTile();
+}
+
+// 一覧で縮小表示されるので、アイコン・名前・一行の説明だけにする。拡張は読み込まない
+async function renderPromoTile() {
+  const browser = await chromium.launch({
+    executablePath: process.env.CHROMIUM_PATH || chromium.executablePath(),
+    headless: true,
+  });
+  try {
+    const page = await browser.newPage({ viewport: { width: 440, height: 280 } });
+    await page.setContent(promoTileHtml());
+    await page.evaluate(() => document.fonts.ready);
+    mkdirSync(promoDir, { recursive: true });
+    const file = join(promoDir, 'small-tile-440x280.png');
+    await page.screenshot({ path: file, type: 'png' });
+    console.log(file);
+  } finally {
+    await browser.close();
+  }
+}
+
+function promoTileHtml() {
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 440px; height: 280px; overflow: hidden; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #e8f0fe 0%, #f5f7fb 60%, #eef6ee 100%);
+    color: #111;
+    display: flex; flex-direction: column; justify-content: center; padding: 0 36px;
+  }
+  .head { display: flex; align-items: center; gap: 16px; }
+  .icon { position: relative; width: 72px; height: 72px; }
+  .icon img { width: 72px; height: 72px; display: block; }
+  .badge {
+    position: absolute; right: -8px; bottom: -6px; width: 28px; height: 24px; border-radius: 6px;
+    background: #22c55e; color: #fff; font: 700 16px/24px system-ui, sans-serif; text-align: center;
+  }
+  h1 { margin: 0; font-size: 34px; line-height: 1.1; letter-spacing: -0.01em; }
+  p { margin: 22px 0 0; font-size: 21px; line-height: 1.35; color: #374151; font-weight: 500; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <div class="icon"><img src="${iconDataUri}" alt="" /><span class="badge">✓</span></div>
+    <h1>Bookmark<br />Replacer</h1>
+  </div>
+  <p>Keep a bookmark on the latest page — in one click.</p>
+</body>
+</html>`;
 }
 
 async function shootLocale(locale, l) {

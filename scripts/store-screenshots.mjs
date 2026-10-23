@@ -150,6 +150,15 @@ async function shootLocale(locale, l) {
   const profile = mkdtempSync(join(tmpdir(), 'bmr-shots-'));
   const executablePath = process.env.CHROMIUM_PATH || chromium.executablePath();
   const restoreLanguages = overrideAppleLanguages(executablePath, l.lang);
+  // Ctrl-C などのシグナルでは finally が走らないので、ここでも defaults を戻す
+  const onSignal = (signal) => {
+    process.off('SIGINT', onSignal);
+    process.off('SIGTERM', onSignal);
+    restoreLanguages();
+    process.exit(signal === 'SIGINT' ? 130 : 143);
+  };
+  process.once('SIGINT', onSignal);
+  process.once('SIGTERM', onSignal);
   let context;
   try {
     context = await chromium.launchPersistentContext(profile, {

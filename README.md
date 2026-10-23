@@ -15,6 +15,7 @@
 - 設定は `chrome.storage.sync` に保存され、Chrome ログイン端末間で同期
 - 結果はバッジ表示でフィードバック (成功 `✓` / 未設定・失敗 `!`)
 - 未設定 / 削除済みブックマーク ID 検出時はオプションページを自動で開く
+- UI は英語と日本語に対応 (Chrome の表示言語に追従)
 
 ## 必要要件
 
@@ -75,11 +76,13 @@ src/
 ├── background/index.ts   service worker (chrome.action.onClicked)
 ├── options/              設定ページ (HTML / TS / CSS)
 ├── lib/
+│   ├── i18n.ts           chrome.i18n ラッパーと options ページの翻訳適用
 │   ├── bookmarks.ts      chrome.bookmarks API ヘルパー (フラット化)
 │   └── storage.ts        chrome.storage.sync の型付きラッパー
 └── types.ts              共通型
 
 public/icons/             16/48/128px のアイコン PNG
+public/_locales/          en / ja の messages.json
 manifest.config.ts        @crxjs/vite-plugin の defineManifest
 vite.config.ts            Vite 設定
 scripts/generate-icons.py アイコン PNG 生成 (zlib のみ使用)

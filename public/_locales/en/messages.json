@@ -1,0 +1,64 @@
+{
+  "locale": {
+    "message": "en",
+    "description": "BCP 47 tag of this locale, used for <html lang>. Do not translate."
+  },
+  "extDescription": {
+    "message": "Overwrite a chosen bookmark's URL with the current tab's URL in a single click."
+  },
+  "actionTitle": {
+    "message": "Overwrite the bookmark URL with the current tab"
+  },
+  "optionsTitle": {
+    "message": "Bookmark Replacer Settings"
+  },
+  "optionsLead": {
+    "message": "Choose the one bookmark whose URL will be overwritten when you click the icon."
+  },
+  "currentHeading": {
+    "message": "Current setting"
+  },
+  "loading": {
+    "message": "Loading…"
+  },
+  "pickerHeading": {
+    "message": "Choose a bookmark"
+  },
+  "searchPlaceholder": {
+    "message": "Filter by title or URL"
+  },
+  "bookmarkListLabel": {
+    "message": "Bookmarks"
+  },
+  "emptyState": {
+    "message": "No matching bookmarks"
+  },
+  "saveButton": {
+    "message": "Save selected bookmark"
+  },
+  "unset": {
+    "message": "Not set"
+  },
+  "bookmarkNotFound": {
+    "message": "Bookmark with ID $ID$ was not found (it may have been deleted or not yet synced)",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "saving": {
+    "message": "Saving…"
+  },
+  "saved": {
+    "message": "Saved"
+  },
+  "saveFailed": {
+    "message": "Failed to save: $ERROR$",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  }
+}

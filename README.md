@@ -12,7 +12,8 @@
 
 - 対象は **1 件のブックマーク** (シンプル運用)
 - アイコンクリックで **即時上書き** (確認ダイアログなし)
-- 設定は `chrome.storage.sync` に保存され、Chrome ログイン端末間で同期
+- 設定 (対象のブックマーク ID) は端末ごとに `chrome.storage.local` へ保存。ブックマーク ID は
+  端末ごとに振られるため同期はせず、端末ごとに対象を選ぶ
 - 結果はバッジ表示でフィードバック (成功 `✓` / 未設定・失敗 `!`)
 - 未設定 / 削除済みブックマーク ID 検出時はオプションページを自動で開く
 - UI は英語と日本語に対応 (Chrome の表示言語に追従)
@@ -65,6 +66,7 @@ npm run package    # build → release/bookmark-replacer-v{version}.zip を生�
 2. `npm run package` を実行
 3. `release/bookmark-replacer-v{version}.zip` が生成される
 4. [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole) からこの zip をアップロード
+5. 掲載情報 (説明文・スクリーンショット・プライバシー欄) は [docs/store/listing.md](docs/store/listing.md) を元に更新する
 
 zip は `dist/` の中身を zip ルートに展開した形 (`manifest.json` が直下) で、
 Web Store の標準フォーマットに準拠しています。`.crx` の作成は不要 (Store 側で署名されます)。
@@ -78,7 +80,7 @@ src/
 ├── lib/
 │   ├── i18n.ts           chrome.i18n ラッパーと options ページの翻訳適用
 │   ├── bookmarks.ts      chrome.bookmarks API ヘルパー (フラット化)
-│   └── storage.ts        chrome.storage.sync の型付きラッパー
+│   └── storage.ts        chrome.storage.local の型付きラッパー
 └── types.ts              共通型
 
 public/icons/             16/48/128px のアイコン PNG
@@ -87,7 +89,9 @@ manifest.config.ts        @crxjs/vite-plugin の defineManifest
 vite.config.ts            Vite 設定
 scripts/generate-icons.py アイコン PNG 生成 (zlib のみ使用)
 scripts/package.mjs       dist/ → release/*.zip パッケージング
+scripts/store-screenshots.mjs  Web Store 用スクリーンショットの生成
 docs/plans/               Dev workflow の計画ファイル
+docs/store/               Web Store の掲載文とスクリーンショット
 release/                  Web Store 提出用 zip 出力先 (zip 自体は git 管理外)
 ```
 

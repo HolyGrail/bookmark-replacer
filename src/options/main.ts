@@ -20,7 +20,8 @@ let allBookmarks: BookmarkLeaf[] = [];
 let savedId: string | null = null;
 let pendingId: string | null = null;
 
-document.documentElement.lang = chrome.i18n.getUILanguage();
+// UI 言語ではなく実際に解決されたロケール (未対応言語なら en) を使う
+document.documentElement.lang = t('locale');
 localizeDocument();
 
 void init();

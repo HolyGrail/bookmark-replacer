@@ -1,4 +1,8 @@
 {
+  "locale": {
+    "message": "ja",
+    "description": "BCP 47 tag of this locale, used for <html lang>. Do not translate."
+  },
   "extDescription": {
     "message": "選んだブックマーク 1 件の URL を、ワンクリックで現在のタブの URL に上書きします。"
   },
@@ -38,7 +42,9 @@
   "bookmarkNotFound": {
     "message": "ID $ID$ のブックマークは見つかりません (削除されたか、未同期の可能性)",
     "placeholders": {
-      "id": { "content": "$1" }
+      "id": {
+        "content": "$1"
+      }
     }
   },
   "saving": {
@@ -50,7 +56,9 @@
   "saveFailed": {
     "message": "保存に失敗しました: $ERROR$",
     "placeholders": {
-      "error": { "content": "$1" }
+      "error": {
+        "content": "$1"
+      }
     }
   }
 }

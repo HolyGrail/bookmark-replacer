@@ -1,4 +1,8 @@
 {
+  "locale": {
+    "message": "en",
+    "description": "BCP 47 tag of this locale, used for <html lang>. Do not translate."
+  },
   "extDescription": {
     "message": "Overwrite a chosen bookmark's URL with the current tab's URL in a single click."
   },
@@ -38,7 +42,9 @@
   "bookmarkNotFound": {
     "message": "Bookmark with ID $ID$ was not found (it may have been deleted or not yet synced)",
     "placeholders": {
-      "id": { "content": "$1" }
+      "id": {
+        "content": "$1"
+      }
     }
   },
   "saving": {
@@ -50,7 +56,9 @@
   "saveFailed": {
     "message": "Failed to save: $ERROR$",
     "placeholders": {
-      "error": { "content": "$1" }
+      "error": {
+        "content": "$1"
+      }
     }
   }
 }

@@ -34,7 +34,7 @@ PRIVACY
 • bookmarks: to update the bookmark you chose.
 • storage: to remember which bookmark you chose, on this device only.
 • activeTab: to read the current tab's URL, only when you click the icon.
-Nothing is sent to the developer or any other server. No analytics.
+The extension itself sends nothing to the developer or any other server, and has no analytics. If Chrome sync is on, Chrome syncs the updated bookmark to your Google Account like any other bookmark.
 
 ――――――――――――――――――――
 
@@ -58,7 +58,7 @@ Bookmark Replacer は、週ごと・リリースごと・連載の回ごとに U
 ・bookmarks：選んだブックマークを更新するため
 ・storage：どのブックマークを選んだかを、この端末に覚えておくため
 ・activeTab：アイコンをクリックしたときに限り、現在のタブの URL を読むため
-開発者や外部のサーバーへデータを送ることはありません。アクセス解析もしていません。
+この拡張機能が開発者や外部のサーバーへデータを送ることはなく、アクセス解析もしていません。Chrome の同期をオンにしている場合は、更新したブックマークもほかのブックマークと同じく Google アカウントへ同期されます。
 ```
 
 ## スクリーンショット

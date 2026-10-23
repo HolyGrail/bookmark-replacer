@@ -80,7 +80,7 @@ src/
 ├── lib/
 │   ├── i18n.ts           chrome.i18n ラッパーと options ページの翻訳適用
 │   ├── bookmarks.ts      chrome.bookmarks API ヘルパー (フラット化)
-│   └── storage.ts        chrome.storage.sync の型付きラッパー
+│   └── storage.ts        chrome.storage.local の型付きラッパー
 └── types.ts              共通型
 
 public/icons/             16/48/128px のアイコン PNG

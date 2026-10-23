@@ -32,9 +32,9 @@ GOOD TO KNOW
 
 PRIVACY
 • bookmarks: to update the bookmark you chose.
-• storage: to remember which bookmark you chose.
+• storage: to remember which bookmark you chose, on this device only.
 • activeTab: to read the current tab's URL, only when you click the icon.
-Nothing is sent outside your browser. No analytics, no remote servers.
+Nothing is sent to the developer or any other server. No analytics.
 
 ――――――――――――――――――――
 
@@ -56,9 +56,9 @@ Bookmark Replacer は、週ごと・リリースごと・連載の回ごとに U
 
 プライバシー
 ・bookmarks：選んだブックマークを更新するため
-・storage：どのブックマークを選んだかを覚えておくため
+・storage：どのブックマークを選んだかを、この端末に覚えておくため
 ・activeTab：アイコンをクリックしたときに限り、現在のタブの URL を読むため
-データはブラウザの外へ送りません。アクセス解析も外部サーバーもありません。
+開発者や外部のサーバーへデータを送ることはありません。アクセス解析もしていません。
 ```
 
 ## スクリーンショット
@@ -89,7 +89,7 @@ Overwrite the URL of one bookmark chosen by the user with the URL of the current
 | 権限        | 記入内容                                                                                                     |
 | ----------- | ------------------------------------------------------------------------------------------------------------ |
 | `bookmarks` | Lists bookmarks on the settings page so the user can choose one, and updates the URL of the chosen bookmark. |
-| `storage`   | Stores the ID of the chosen bookmark in chrome.storage.sync.                                                 |
+| `storage`   | Stores the ID of the chosen bookmark in chrome.storage.local.                                                |
 | `activeTab` | Reads the URL of the active tab only when the user clicks the toolbar icon.                                  |
 
 **Data usage**: 収集するユーザーデータはなし。リモートコードは使わない。

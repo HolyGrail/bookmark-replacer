@@ -41,7 +41,7 @@ Chrome へのロードは `dist/` を `chrome://extensions/` の「パッケー�
 src/
 ├── types.ts              StoredConfig, BookmarkLeaf
 ├── lib/
-│   ├── storage.ts        chrome.storage.sync の薄い型付きラッパー
+│   ├── storage.ts        chrome.storage.local の薄い型付きラッパー
 │   ├── bookmarks.ts      chrome.bookmarks.getTree() を leaf だけに flatten
 │   └── i18n.ts           chrome.i18n.getMessage の型付きラッパー + data-i18n の適用
 ├── background/index.ts   Service Worker (action.onClicked → lib/storage + chrome.bookmarks.update)
@@ -52,7 +52,7 @@ src/
 
 ### ストレージスキーマ
 
-`chrome.storage.sync` のキーは `'config'` 1 本のみ。値は `StoredConfig = { bookmarkId: string | null }`。スキーマを拡張する場合は `src/lib/storage.ts` の `DEFAULT_CONFIG` と `src/types.ts` を同時に更新する。`getConfig()` は常にデフォルトをマージして返すので、新フィールド追加時の後方互換は自動で確保される。
+`chrome.storage.local` のキーは `'config'` 1 本のみ。`sync` にしないのは、ブックマーク ID が端末ごとに振られるため (同期すると別端末で選んだ ID がこの端末の無関係なブックマークを指しうる)。0.1.x は `sync` に保存していたので、`getConfig()` は `local` が空なら `sync` の値を `local` へ移して `sync` 側を消す。値は `StoredConfig = { bookmarkId: string | null }`。スキーマを拡張する場合は `src/lib/storage.ts` の `DEFAULT_CONFIG` と `src/types.ts` を同時に更新する。`getConfig()` は常にデフォルトをマージして返すので、新フィールド追加時の後方互換は自動で確保される。
 
 ### 多言語対応 (chrome.i18n)
 

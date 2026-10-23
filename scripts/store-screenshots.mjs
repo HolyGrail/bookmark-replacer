@@ -195,7 +195,7 @@ async function shootLocale(locale, l) {
           });
           if (b.target) target = node.id;
         }
-        await chrome.storage.sync.clear();
+        await chrome.storage.local.clear();
         return target;
       },
       l.bookmarks.map((b) => ({ ...b, target: b.title === l.target })),
